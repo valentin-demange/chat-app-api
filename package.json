@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/valentin-demange/chat-app-api#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "bcrypt": "^5.1.0",
+    "express": "^4.18.2",
+    "express-jwt": "^8.2.1",
+    "jsonwebtoken": "^9.0.0"
   }
 }
