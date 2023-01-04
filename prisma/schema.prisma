@@ -7,28 +7,47 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// model Post {
-//   id        Int      @id @default(autoincrement())
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   title     String   @db.VarChar(255)
-//   content   String?
-//   published Boolean  @default(false)
-//   author    User     @relation(fields: [authorId], references: [id])
-//   authorId  Int
-// }
-
-// model Profile {
-//   id     Int     @id @default(autoincrement())
-//   bio    String?
-//   user   User    @relation(fields: [userId], references: [id])
-//   userId Int     @unique
-// }
-
 model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  password    String?
-  // posts   Post[]
-  // profile Profile?
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  avatar    String?
+  Message   Message?
+  Member    Member[]
 }
+
+model Chat {
+  id          Int       @id @default(autoincrement())
+  name        String?
+  type        String    @default("private")
+  messages    Message[]
+  members     Member[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  chatId    Int
+  userId    Int      @unique
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model Member {
+  user   User   @relation(fields: [userId], references: [id])
+  chat   Chat   @relation(fields: [chatId], references: [id])
+  userId Int
+  chatId Int
+
+  @@unique([userId, chatId])
+}
+
+// model User {
+//   id         Int      @id @default(autoincrement())
+//   name       String
+//   friends    User[]   @relation(name: "UserFriends")
+//   friendOf   User[]   @relation(name: "UserFriendOf")
+// }
