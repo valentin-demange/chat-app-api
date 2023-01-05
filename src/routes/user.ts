@@ -38,8 +38,15 @@ router.post(
   })
 );
 
-router.post("/logout", (req, res) => {
-  return res.send("POST logout is working !");
+router.get("/logout", (req, res, next) => {
+  // @ts-ignore
+  req.logout(function (err) {
+    if (err) {
+      console.log("error")
+      return next(err);
+    }
+    res.redirect("/logout");
+  });
 });
 
 export default router;
