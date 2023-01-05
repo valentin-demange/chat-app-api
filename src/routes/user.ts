@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
+const bcrypt = require("bcryptjs");
 const passport = require("passport");
 
 const router = Router();
@@ -9,19 +10,24 @@ router.post("/sign-up", async (req, res, next) => {
   try {
     const { email, password, firstName, lastName } = req.body;
 
-    const result = await prisma.user.create({
-      data: {
-        email,
-        password,
-        firstName,
-        lastName,
-      },
+    await bcrypt.hash(password, 10, async (err:any, hashedPassword:string) => {
+      
+      const result = await prisma.user.create({
+        data: {
+          email,
+          password: hashedPassword,
+          firstName,
+          lastName,
+        },
+      });
+
+      res.json(result);
+
     });
-    res.json(result);
-    res.redirect("/");
+
   } catch (error) {
     console.error(error);
-    res.status(500).send("There was an error while creating a new user.");
+    res.status(500).send("There was an error while creating a new user");
   }
 });
 router.post(
