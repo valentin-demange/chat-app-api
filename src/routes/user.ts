@@ -6,18 +6,23 @@ const router = Router();
 const prisma = new PrismaClient();
 
 router.post("/sign-up", async (req, res, next) => {
-  const { email, password, firstName, lastName } = req.body;
+  try {
+    const { email, password, firstName, lastName } = req.body;
 
-  const result = await prisma.user.create({
-    data: {
-      email,
-      password,
-      firstName,
-      lastName,
-    },
-  });
-  res.json(result);
-  res.redirect("/");
+    const result = await prisma.user.create({
+      data: {
+        email,
+        password,
+        firstName,
+        lastName,
+      },
+    });
+    res.json(result);
+    res.redirect("/");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("There was an error while creating a new user.");
+  }
 });
 router.post(
   "/login",
