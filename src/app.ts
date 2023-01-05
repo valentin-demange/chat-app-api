@@ -8,6 +8,7 @@ const session = require("express-session");
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const app = express()
+const bcrypt = require("bcryptjs");
 
 app.use(session({ secret: "blabla", resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
@@ -24,13 +25,19 @@ passport.use(
         },
       });
       console.log(user)
+
       if (!user) {
         return done(null, false, { message: "Incorrect username" })
       }
-      if (user.password !== password) {
-        return done(null, false, { message: "Incorrect password" })
-      }
-      return done(null, user)
+      bcrypt.compare(password, user.password, (err:any, res: any) => {
+        if (res) {
+          // passwords match! log user in
+          return done(null, user)
+        } else {
+          // passwords do not match!
+          return done(null, false, { message: "Incorrect password" })
+        }
+      })
     } catch (err) {
       return done(err)
     }
