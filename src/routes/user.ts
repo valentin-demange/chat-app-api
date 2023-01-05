@@ -10,20 +10,23 @@ router.post("/sign-up", async (req, res, next) => {
   try {
     const { email, password, firstName, lastName } = req.body;
 
-    await bcrypt.hash(password, 10, async (err:any, hashedPassword:string) => {
-      
-      const result = await prisma.user.create({
-        data: {
-          email,
-          password: hashedPassword,
-          firstName,
-          lastName,
-        },
-      });
+    await bcrypt.hash(
+      password,
+      10,
+      async (err: any, hashedPassword: string) => {
+        const result = await prisma.user.create({
+          data: {
+            email,
+            password: hashedPassword,
+            firstName,
+            lastName,
+          },
+        });
+      }
+    );
 
-      res.json(result);
-
-    });
+    res.redirect("/sign-up-done");
+    return next();
 
   } catch (error) {
     console.error(error);
@@ -42,10 +45,10 @@ router.get("/logout", (req, res, next) => {
   // @ts-ignore
   req.logout(function (err) {
     if (err) {
-      console.log("error")
+      console.log("error");
       return next(err);
     }
-    res.redirect("/logout");
+    res.redirect("/logout-done");
   });
 });
 
