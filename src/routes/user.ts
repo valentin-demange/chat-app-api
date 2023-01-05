@@ -1,29 +1,33 @@
-import { Router } from 'express';
-import { Prisma, PrismaClient } from '@prisma/client'
+import { Router } from "express";
+import { Prisma, PrismaClient } from "@prisma/client";
+const passport = require("passport");
 
 const router = Router();
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 router.post("/sign-up", async (req, res, next) => {
-
-  const { email, password, firstName, lastName } = req.body
+  const { email, password, firstName, lastName } = req.body;
 
   const result = await prisma.user.create({
     data: {
       email,
       password,
       firstName,
-      lastName
+      lastName,
     },
-  })
-  res.json(result)
+  });
+  res.json(result);
   res.redirect("/");
+});
+router.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/OK",
+    failureRedirect: "/KO",
+  })
+);
 
-});
-router.post('/login', (req, res) => {
-  return res.send("POST login is working !");
-});
-router.post('/logout', (req, res) => {
+router.post("/logout", (req, res) => {
   return res.send("POST logout is working !");
 });
 
