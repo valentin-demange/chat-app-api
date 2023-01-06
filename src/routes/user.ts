@@ -14,41 +14,51 @@ router.post("/sign-up", async (req, res, next) => {
       password,
       10,
       async (err: any, hashedPassword: string) => {
-        const result = await prisma.user.create({
-          data: {
-            email,
-            password: hashedPassword,
-            firstName,
-            lastName,
-          },
-        });
+        try {
+          const result = await prisma.user.create({
+            data: {
+              email,
+              password: hashedPassword,
+              firstName,
+              lastName,
+            },
+          });
+          res.status(200).send({ message: "Sign-up successful" });
+        } catch (error:any) {
+          if (error.code === "P2002") {
+            // user with the given email already exists
+            res.status(409).send("A user with the given email already exists");
+          } else {
+            console.error(error);
+            res.status(500).send("There was an error while creating a new user");
+          }
+          return next(error);
+        }
       }
     );
-
-    res.status(200).send({ message: "Sign-up successful" })
-    return next();
-
   } catch (error) {
-    console.error(error);
-    res.status(500).send("There was an error while creating a new user");
+    return next(error);
   }
 });
 router.post("/login", (req, res, next) => {
-  passport.authenticate("local", (err: any, user: any, info: { message: any; }) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.status(401).send({ message: info.message });
-    }
-    // @ts-ignore
-    req.logIn(user, (err) => {
+  passport.authenticate(
+    "local",
+    (err: any, user: any, info: { message: any }) => {
       if (err) {
         return next(err);
       }
-      return res.status(200).send({ message: "Login successful" });
-    });
-  })(req, res, next);
+      if (!user) {
+        return res.status(401).send({ message: info.message });
+      }
+      // @ts-ignore
+      req.logIn(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+        return res.status(200).send({ message: "Login successful" });
+      });
+    }
+  )(req, res, next);
 });
 
 router.get("/logout", (req, res, next) => {
