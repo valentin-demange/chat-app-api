@@ -26,6 +26,6 @@ require('./utils/passport');
 
 app.use('/api/users', routes.users)
 app.use('/api/chats', routes.chats)
-
+app.use('/api/messages', routes.messages)
 
 export default app
