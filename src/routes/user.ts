@@ -29,7 +29,6 @@ router.post("/sign-up", async (req, res, next) => {
             // user with the given email already exists
             res.status(409).send("A user with the given email already exists");
           } else {
-            console.error(error);
             res.status(500).send("There was an error while creating a new user");
           }
           return next(error);
