@@ -9,13 +9,19 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const app = express()
 const bcrypt = require("bcryptjs");
+const cors = require('cors')
 
 app.use(session({ secret: "blabla", resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
-
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+)
 passport.use(
   new LocalStrategy(async (username:string, password:string, done:any) => {
     try {
