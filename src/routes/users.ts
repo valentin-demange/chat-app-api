@@ -2,7 +2,7 @@ import { Router } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
-
+const _ = require('lodash');
 const router = Router();
 const prisma = new PrismaClient();
 
@@ -83,6 +83,21 @@ router.get('/:userId/chats', async (req, res) => {
     res.send(chatIds);
   } catch (error) {
     res.status(500).send(error);
+  }
+});
+router.get('/:userId', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: Number(userId) },
+    });
+    if (!user) {
+      return res.status(404).send({ error: 'User not found' });
+    }
+    const userWithoutPassword = _.omit(user, ['password']);
+    return res.send(userWithoutPassword);
+  } catch (error) {
+    return res.status(500).send({ error: 'An error occurred' });
   }
 });
 
