@@ -7,7 +7,6 @@ const router = Router();
 const prisma = new PrismaClient();
 
 router.get("/:chatId/messages", async (req, res) => {
-  console.log("Hola")
   const chatId = Number(req.params.chatId);
   try {
     const messages = await prisma.message.findMany({
