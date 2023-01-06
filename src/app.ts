@@ -24,6 +24,6 @@ app.use(
 )
 require('./utils/passport');
 
-app.use('/api/users', routes.user)
+app.use('/api/users', routes.users)
 
 export default app
