@@ -25,7 +25,7 @@ router.post("/sign-up", async (req, res, next) => {
       }
     );
 
-    res.redirect("/sign-up-done");
+    res.status(200).send({ message: "Sign-up successful" })
     return next();
 
   } catch (error) {
