@@ -59,7 +59,6 @@ router.post("/login", (req, res, next) => {
     }
   )(req, res, next);
 });
-
 router.get("/logout", (req, res, next) => {
   // @ts-ignore
   req.logout(function (err) {
@@ -69,6 +68,22 @@ router.get("/logout", (req, res, next) => {
     }
     res.redirect("/logout-done");
   });
+});
+
+router.get('/:userId/chats', async (req, res) => {
+  try {
+    const userId = Number(req.params.userId);
+    const members = await prisma.member.findMany({
+      where: { userId: userId },
+    });
+    if (!members) {
+      return res.status(404).send('User not found');
+    }
+    const chatIds = members.map((member) => member.chatId);
+    res.send(chatIds);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
 export default router;
