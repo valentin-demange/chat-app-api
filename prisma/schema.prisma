@@ -14,7 +14,7 @@ model User {
   firstName String
   lastName  String
   avatar    String?
-  Message   Message?
+  Message   Message[]
   Member    Member[]
 }
 
@@ -31,7 +31,7 @@ model Message {
   user      User     @relation(fields: [userId], references: [id])
   chat      Chat     @relation(fields: [chatId], references: [id])
   chatId    Int
-  userId    Int      @unique
+  userId    Int
   message   String
   createdAt DateTime @default(now())
 }
