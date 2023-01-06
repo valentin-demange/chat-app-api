@@ -33,13 +33,23 @@ router.post("/sign-up", async (req, res, next) => {
     res.status(500).send("There was an error while creating a new user");
   }
 });
-router.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/OK",
-    failureRedirect: "/KO",
-  })
-);
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err: any, user: any, info: { message: any; }) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(401).send({ message: info.message });
+    }
+    // @ts-ignore
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      return res.status(200).send({ message: "Login successful" });
+    });
+  })(req, res, next);
+});
 
 router.get("/logout", (req, res, next) => {
   // @ts-ignore
