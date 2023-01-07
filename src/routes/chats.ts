@@ -14,9 +14,7 @@ router.get("/:chatId/messages", async (req, res) => {
     });
     res.send(messages);
   } catch (e) {
-    res
-      .status(500)
-      .send("An error occurred while retrieving messages");
+    res.status(500).send("An error occurred while retrieving messages");
   }
 });
 router.get("/:chatId", async (req, res) => {
@@ -35,26 +33,28 @@ router.get("/:chatId", async (req, res) => {
   }
 });
 
-// router.post("/new", async (req, res) => {
-//   // get the list of member user IDs from the request body
-//   const memberUserIds = req.body.memberUserIds;
+router.post("/new", async (req, res) => {
+  // get the list of member user IDs from the request body
+  const memberUserIds = JSON.parse(req.body.memberUserIds);
 
-//   console.log(memberUserIds)
+  console.log(memberUserIds);
 
-//   // create a new chat
-//   const newChat = await prisma.chat.create({
-//     data: { name: "", type: "private" },
-//   });
+  // create a new chat
+  const newChat = await prisma.chat.create({
+    data: { name: "", type: "private" },
+  });
 
-//   // create a member object for each user ID
-//   const members = memberUserIds.map((userId: any) => {
-//     return { userId: userId, chatId: newChat.id };
-//   });
+  // create a member object for each user ID
+  const memberCreations = memberUserIds.map(async (userId: any) => {
+    // create the member objects in the database
+    return prisma.member.create({
+      data: { userId: userId, chatId: newChat.id },
+    });
+  });
 
-//   // create the member objects in the database
-//   await prisma.member.create({ data: members });
+  await Promise.all(memberCreations);
 
-//   res.json(newChat);
-// });
+  res.json(newChat);
+});
 
 export default router;
