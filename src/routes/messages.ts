@@ -6,9 +6,7 @@ const passport = require("passport");
 const router = Router();
 const prisma = new PrismaClient();
 
-// router.post("/messages", async (req, res) => {
-//   console.log("Hola !!")
-// })
+
 router.post("/new", async (req, res) => {
   try {
     const { userId, chatId, message } = req.body;

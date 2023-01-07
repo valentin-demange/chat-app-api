@@ -23,7 +23,7 @@ router.post("/sign-up", async (req, res, next) => {
               lastName,
             },
           });
-          res.status(200).send({ message: "Sign-up successful" });
+          res.status(200).send("Sign-up successful");
         } catch (error:any) {
           if (error.code === "P2002") {
             // user with the given email already exists
@@ -47,14 +47,14 @@ router.post("/login", (req, res, next) => {
         return next(err);
       }
       if (!user) {
-        return res.status(401).send({ message: info.message });
+        return res.status(401).send(info.message);
       }
       // @ts-ignore
       req.logIn(user, (err) => {
         if (err) {
           return next(err);
         }
-        return res.status(200).send({ message: "Login successful" });
+        return res.status(200).send("Login successful");
       });
     }
   )(req, res, next);
@@ -92,12 +92,12 @@ router.get('/:userId', async (req, res) => {
       where: { id: Number(userId) },
     });
     if (!user) {
-      return res.status(404).send({ error: 'User not found' });
+      return res.status(404).send('User not found');
     }
     const userWithoutPassword = _.omit(user, ['password']);
     return res.send(userWithoutPassword);
   } catch (error) {
-    return res.status(500).send({ error: 'An error occurred' });
+    return res.status(500).send('An error occurred');
   }
 });
 

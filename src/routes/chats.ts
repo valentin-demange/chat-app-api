@@ -14,10 +14,12 @@ router.get("/:chatId/messages", async (req, res) => {
     });
     res.send(messages);
   } catch (e) {
-    res.status(500).send({ error: "An error occurred while retrieving messages" });
+    res
+      .status(500)
+      .send("An error occurred while retrieving messages");
   }
 });
-router.get('/:chatId', async (req, res) => {
+router.get("/:chatId", async (req, res) => {
   const { chatId } = req.params;
   try {
     const chat = await prisma.chat.findUnique({
@@ -25,13 +27,34 @@ router.get('/:chatId', async (req, res) => {
       include: { members: false, messages: false },
     });
     if (!chat) {
-      return res.status(404).send({ error: 'Chat not found' });
+      return res.status(404).send("Chat not found");
     }
     return res.send(chat);
   } catch (error) {
-    return res.status(500).send({ error: 'An error occurred' });
+    return res.status(500).send("An error occurred");
   }
 });
 
+// router.post("/new", async (req, res) => {
+//   // get the list of member user IDs from the request body
+//   const memberUserIds = req.body.memberUserIds;
+
+//   console.log(memberUserIds)
+
+//   // create a new chat
+//   const newChat = await prisma.chat.create({
+//     data: { name: "", type: "private" },
+//   });
+
+//   // create a member object for each user ID
+//   const members = memberUserIds.map((userId: any) => {
+//     return { userId: userId, chatId: newChat.id };
+//   });
+
+//   // create the member objects in the database
+//   await prisma.member.create({ data: members });
+
+//   res.json(newChat);
+// });
 
 export default router;
