@@ -19,6 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
+    // origin: "*",
     credentials: true,
   })
 )
