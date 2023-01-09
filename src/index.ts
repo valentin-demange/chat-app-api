@@ -25,6 +25,10 @@ io.on('connection', (socket:any) => {
     // Send the message to all sockets
     io.emit('message', message);
   });
+
+  socket.on('disconnect', () => {
+    console.log('🔥: A user disconnected');
+  });
 });
 
 // io.on('connection', (socket: any) => {
