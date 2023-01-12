@@ -12,24 +12,24 @@ server.listen(process.env.PORT, () => {
 
 const io = socketio(server);
 
-// When a new socket connection is established
-io.on('connection', (socket:any) => {
-  // Print a message to the console
-  console.log('New socket connection');
+// // When a new socket connection is established
+// io.on('connection', (socket:any) => {
+//   // Print a message to the console
+//   console.log('New socket connection');
 
-  // When the client sends a message
-  socket.on('message', (message:string) => {
-    // Print the message to the console
-    console.log(`Received message: ${message}`);
+//   // // When the client sends a message
+//   // socket.on('message', (message:string) => {
+//   //   // Print the message to the console
+//   //   console.log(`Received message: ${message}`);
 
-    // Send the message to all sockets
-    io.emit('message', message);
-  });
+//   //   // Send the message to all sockets
+//   //   io.emit('message', message);
+//   // });
 
-  socket.on('disconnect', () => {
-    console.log('🔥: A user disconnected');
-  });
-});
+//   socket.on('disconnect', () => {
+//     console.log('🔥: A user disconnected');
+//   });
+// });
 
 // io.on('connection', (socket: any) => {
 //   socket.on('subscribe chats', (userId:string) => {
