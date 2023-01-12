@@ -6,6 +6,12 @@ const _ = require('lodash');
 const router = Router();
 const prisma = new PrismaClient();
 
+router.get('/test', function(req, res, next) {
+  // @ts-ignore
+  console.log(req.user)
+  return res.status(200).send("OK")
+});
+
 router.post("/sign-up", async (req, res, next) => {
   try {
     const { email, password, firstName, lastName } = req.body;
@@ -100,5 +106,8 @@ router.get('/:userId', async (req, res) => {
     return res.status(500).send('An error occurred');
   }
 });
+
+
+
 
 export default router;
