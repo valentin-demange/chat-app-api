@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { Member, Prisma, PrismaClient } from "@prisma/client";
+import { networkInterfaces } from "os";
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 
@@ -22,14 +23,24 @@ router.get("/:chatId", async (req, res) => {
   try {
     let chat = await prisma.chat.findUnique({
       where: { id: Number(chatId) },
-      include: { members: true, messages: false },
+      include: { members: true, messages: { take: 1, orderBy: { createdAt: "desc" } } },
     });
     if (!chat) {
       return res.status(404).send("Chat not found");
     }
-    // @ts-ignore
-    chat.members = chat.members.map((obj: Member) => obj.userId)
-    return res.send(chat);
+    let lastMessageTimestamp;
+    if (chat.messages.length > 0) {
+      lastMessageTimestamp = chat.messages[0].createdAt;
+    }
+    const chatInfo = {
+      id: chat.id,
+      name: chat.name,
+      type: chat.type,
+      avatar: chat.avatar,
+      membersUid: chat.members.map((obj: Member) => obj.userId),
+      lastMessage: lastMessageTimestamp,
+    };
+    return res.send(chatInfo);
   } catch (error) {
     return res.status(500).send("An error occurred");
   }
