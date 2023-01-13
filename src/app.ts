@@ -30,5 +30,8 @@ app.use('/api/users', routes.users)
 app.use('/api/chats', checkAuthenticated, routes.chats);
 app.use('/api/messages', checkAuthenticated, routes.messages);
 app.use('/api/members', checkAuthenticated, routes.members);
+// app.use('/api/chats', routes.chats);
+// app.use('/api/messages', routes.messages);
+// app.use('/api/members', routes.members);
 
 export default app

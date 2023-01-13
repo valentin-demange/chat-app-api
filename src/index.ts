@@ -1,3 +1,4 @@
+import { Message } from '@prisma/client';
 import http from 'http'
 import app from './app'
 require('dotenv').config()
@@ -11,6 +12,22 @@ server.listen(process.env.PORT, () => {
 
 
 const io = socketio(server);
+
+io.on('connection', (socket:any) => {
+  console.log("New socket connection")
+  socket.on('send message', (message:Message, chatId:number) => {
+    console.log(`New message in room n°${chatId}`)
+    io.to(chatId).emit('new message', message);
+  });
+  socket.on('join chat room', (chatId:number) => {
+    console.log(`New user in room n°${chatId}`)
+    socket.join(chatId);
+  });
+  socket.on('leave chat room', (chatId:number) => {
+    console.log(`User leaving room n°${chatId}`)
+    socket.leave(chatId);
+  });
+});
 
 // // When a new socket connection is established
 // io.on('connection', (socket:any) => {
