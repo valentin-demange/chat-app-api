@@ -67,12 +67,14 @@ router.post("/login", (req, res, next) => {
 });
 router.get("/logout", (req, res, next) => {
   // @ts-ignore
-  req.logout(function (err) {
+  req.logout(function(err){
     if (err) {
-      console.log("error");
+      console.log(err);
       return next(err);
     }
+    return res.status(200).send({ message: 'Successfully logged out' })
   });
+  
 });
 
 router.get('/:userId/chats', async (req, res) => {
