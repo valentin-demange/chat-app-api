@@ -1,37 +1,44 @@
-import { User } from '@prisma/client';
-import express from 'express'
-import routes from './routes';
-import { checkAuthenticated } from './utils/passport';
+import { User } from "@prisma/client";
+import express from "express";
+import { CLIENT_URL, NODE_ENV, SESSION_SECRET } from "./config";
+import routes from "./routes";
+import { checkAuthenticated } from "./utils/passport";
 
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const session = require("express-session");
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
-const app = express()
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+const app = express();
 const bcrypt = require("bcryptjs");
-const cors = require('cors')
+const cors = require("cors");
 
-app.use(session({ secret: "blabla", resave: false, saveUninitialized: true }));
+app.use(
+  session({ secret: SESSION_SECRET, resave: false, saveUninitialized: true })
+);
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.json())
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: CLIENT_URL,
     // origin: "*",
     credentials: true,
   })
-)
-require('./utils/passport');
+);
+require("./utils/passport");
 
-app.use('/api/users', routes.users)
-app.use('/api/chats', checkAuthenticated, routes.chats);
-app.use('/api/messages', checkAuthenticated, routes.messages);
-app.use('/api/members', checkAuthenticated, routes.members);
-// app.use('/api/chats', routes.chats);
-// app.use('/api/messages', routes.messages);
-// app.use('/api/members', routes.members);
+app.use("/api/users", routes.users);
 
-export default app
+if (NODE_ENV == "dev") {
+  app.use("/api/chats", routes.chats);
+  app.use("/api/messages", routes.messages);
+  app.use("/api/members", routes.members);
+} else {
+  app.use('/api/chats', checkAuthenticated, routes.chats);
+  app.use('/api/messages', checkAuthenticated, routes.messages);
+  app.use('/api/members', checkAuthenticated, routes.members);
+}
+
+export default app;

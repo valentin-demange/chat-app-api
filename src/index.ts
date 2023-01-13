@@ -1,13 +1,14 @@
 import { Message } from '@prisma/client';
 import http from 'http'
 import app from './app'
+import { PORT } from './config';
 require('dotenv').config()
 const socketio = require('socket.io');
 
 const server = http.createServer(app)
 
-server.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`)
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })
 
 

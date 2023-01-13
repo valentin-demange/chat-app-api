@@ -77,9 +77,10 @@ router.get("/logout", (req, res, next) => {
   
 });
 
-router.get('/:userId/chats', async (req, res) => {
+router.get('/current/chats', async (req, res) => {
   try {
-    const userId = Number(req.params.userId);
+    // @ts-ignore
+    const userId = req.user.id;
     const members = await prisma.member.findMany({
       where: { userId: userId },
     });
@@ -92,12 +93,15 @@ router.get('/:userId/chats', async (req, res) => {
     res.status(500).send(error);
   }
 });
-router.get('/:userId', async (req, res) => {
-  const { userId } = req.params;
+router.get('/current', async (req, res) => {
+  // const { userId } = req.params;
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: Number(userId) },
-    });
+    // const user = await prisma.user.findUnique({
+    //   where: { id: Number(userId) },
+    // });
+
+    // @ts-ignore
+    const user = req.user;
     if (!user) {
       return res.status(404).send('User not found');
     }
