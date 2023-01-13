@@ -30,7 +30,8 @@ router.get("/:chatId", async (req, res) => {
     }
     let lastMessageTimestamp;
     if (chat.messages.length > 0) {
-      lastMessageTimestamp = chat.messages[0].createdAt;
+      const utcTimestamp = new Date(chat.messages[0].createdAt);
+      lastMessageTimestamp = (new Date(utcTimestamp.getTime())).toLocaleString('fr-FR');
     }
     const chatInfo = {
       id: chat.id,
