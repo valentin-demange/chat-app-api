@@ -72,7 +72,6 @@ router.get("/logout", (req, res, next) => {
       console.log("error");
       return next(err);
     }
-    res.redirect("/logout-done");
   });
 });
 
