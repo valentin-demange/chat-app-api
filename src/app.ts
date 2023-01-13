@@ -1,6 +1,7 @@
 import { User } from '@prisma/client';
 import express from 'express'
 import routes from './routes';
+import { checkAuthenticated } from './utils/passport';
 
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
@@ -26,8 +27,8 @@ app.use(
 require('./utils/passport');
 
 app.use('/api/users', routes.users)
-app.use('/api/chats', routes.chats)
-app.use('/api/messages', routes.messages)
-app.use('/api/members', routes.members)
+app.use('/api/chats', checkAuthenticated, routes.chats);
+app.use('/api/messages', checkAuthenticated, routes.messages);
+app.use('/api/members', checkAuthenticated, routes.members);
 
 export default app

@@ -47,3 +47,8 @@ passport.deserializeUser(async (id: number, done:any) => {
     done(error)
   }
 })
+
+export const checkAuthenticated = (req:any, res:any, next:any) => {
+  if (req.isAuthenticated()) { return next() }
+  return res.status(401).send("Log-in required")
+}
