@@ -64,7 +64,7 @@ router.post("/sign-up", async (req, res, next) => {
     return next(error);
   }
 });
-router.post("/login", (req, res, next) => {
+router.post("/login", (req:any, res, next) => {
   passport.authenticate(
     "local",
     (err: any, user: any, info: { message: any }) => {
@@ -74,8 +74,7 @@ router.post("/login", (req, res, next) => {
       if (!user) {
         return res.status(401).send(info.message);
       }
-      // @ts-ignore
-      req.logIn(user, (err) => {
+      req.logIn(user, (err:any) => {
         if (err) {
           return next(err);
         }
@@ -84,9 +83,8 @@ router.post("/login", (req, res, next) => {
     }
   )(req, res, next);
 });
-router.get("/logout", (req, res, next) => {
-  // @ts-ignore
-  req.logout(function (err) {
+router.get("/logout", (req:any, res, next) => {
+  req.logout(function (err:any) {
     if (err) {
       console.log(err);
       return next(err);
