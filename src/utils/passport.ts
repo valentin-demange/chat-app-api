@@ -13,7 +13,6 @@ passport.use(
           email: username
         },
       });
-      console.log(user)
 
       if (!user) {
         return done(null, false, { message: "Incorrect username" })

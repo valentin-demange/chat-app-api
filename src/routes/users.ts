@@ -7,11 +7,6 @@ const _ = require("lodash");
 const router = Router();
 const prisma = new PrismaClient();
 
-router.get("/test", function (req: any, res, next) {
-  console.log(req.user);
-  return res.status(200).send("OK");
-});
-
 router.post("/sign-up", async (req, res, next) => {
   try {
     const { email, password, firstName, lastName } = req.body;
@@ -86,7 +81,6 @@ router.post("/login", (req:any, res, next) => {
 router.get("/logout", (req:any, res, next) => {
   req.logout(function (err:any) {
     if (err) {
-      console.log(err);
       return next(err);
     }
     return res.status(200).send({ message: "Successfully logged out" });
