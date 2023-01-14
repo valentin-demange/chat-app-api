@@ -8,6 +8,8 @@ heroku git:remote -a blabla-19-90
 git remote -v
 <!-- push on heroku remote branch -->
 git push heroku main
+<!-- Logs -->
+heroku logs --tail
 
 
 # Prisma
