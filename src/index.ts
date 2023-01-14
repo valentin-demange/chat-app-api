@@ -43,5 +43,9 @@ io.on("connection", (socket: any) => {
     console.log(`New chat for user n°${userId}`);
     io.to(userId).emit("new chat", chatId);
   });
+  socket.on("delete chat", (userId: number, chatId: number) => {
+    console.log(`Delete chat for user n°${userId}`);
+    io.to(userId).emit("delete chat", chatId);
+  });
 });
 
