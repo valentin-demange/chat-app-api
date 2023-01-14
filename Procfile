@@ -1,1 +1,1 @@
-web: tsc & node .
+web: node .
