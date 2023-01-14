@@ -50,8 +50,6 @@ router.post("/new", async (req, res) => {
   // get the list of member user IDs from the request body
   const memberUserIds = req.body.memberUserIds;
 
-  console.log(memberUserIds);
-
   // create a new chat
   const newChat = await prisma.chat.create({
     data: { name: "", type: "private" },
