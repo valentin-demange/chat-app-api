@@ -68,4 +68,19 @@ router.post("/new", async (req, res) => {
   res.json(newChat);
 });
 
+router.delete("/:chatId", async (req, res) => {
+  try {
+    const chatId = parseInt(req.params.chatId);
+    // Delete all related members
+    await prisma.member.deleteMany({ where: { chatId } });
+    // Delete all related messages
+    await prisma.message.deleteMany({ where: { chatId } });
+    // Delete the chat
+    await prisma.chat.delete({ where: { id: chatId } });
+    res.send("Chat deleted successfully");
+  } catch (err:any) {
+    res.status(500).send(err.message);
+  }
+});
+
 export default router;
