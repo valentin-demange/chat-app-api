@@ -1,3 +1,3 @@
-web: npm start
+web: tsc && node .
 
-release: npx prisma generate && npx prisma migrate deploy
+release: npx prisma migrate deploy && npx migrate generate
