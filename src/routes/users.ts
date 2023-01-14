@@ -6,8 +6,7 @@ const _ = require('lodash');
 const router = Router();
 const prisma = new PrismaClient();
 
-router.get('/test', function(req, res, next) {
-  // @ts-ignore
+router.get('/test', function(req:any, res, next) {
   console.log(req.user)
   return res.status(200).send("OK")
 });
@@ -77,31 +76,47 @@ router.get("/logout", (req, res, next) => {
   
 });
 
-router.get('/current/chats', async (req, res) => {
+router.get('/current/chats', async (req:any, res) => {
   try {
-    // @ts-ignore
+    if (!req.user) {
+      return res.status(404).send('User not found');
+    }
     const userId = req.user.id;
     const members = await prisma.member.findMany({
       where: { userId: userId },
     });
-    if (!members) {
-      return res.status(404).send('User not found');
-    }
     const chatIds = members.map((member) => member.chatId);
     res.send(chatIds);
   } catch (error) {
     res.status(500).send(error);
   }
 });
-router.get('/current', async (req, res) => {
+router.get('/current', async (req:any, res) => {
   // const { userId } = req.params;
   try {
     // const user = await prisma.user.findUnique({
     //   where: { id: Number(userId) },
     // });
 
-    // @ts-ignore
     const user = req.user;
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    const userWithoutPassword = _.omit(user, ['password']);
+    return res.send(userWithoutPassword);
+  } catch (error) {
+    return res.status(500).send('An error occurred');
+  }
+});
+
+router.get('/:userId', async (req:any, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: Number(userId) },
+    });
+
+    // const user = req.user;
     if (!user) {
       return res.status(404).send('User not found');
     }

@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { Member, Prisma, PrismaClient } from "@prisma/client";
-import { networkInterfaces } from "os";
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 
@@ -49,7 +48,7 @@ router.get("/:chatId", async (req, res) => {
 
 router.post("/new", async (req, res) => {
   // get the list of member user IDs from the request body
-  const memberUserIds = JSON.parse(req.body.memberUserIds);
+  const memberUserIds = req.body.memberUserIds;
 
   console.log(memberUserIds);
 
