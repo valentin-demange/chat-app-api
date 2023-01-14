@@ -45,10 +45,3 @@ model Member {
 
   @@unique([userId, chatId])
 }
-
-// model User {
-//   id         Int      @id @default(autoincrement())
-//   name       String
-//   friends    User[]   @relation(name: "UserFriends")
-//   friendOf   User[]   @relation(name: "UserFriendOf")
-// }
