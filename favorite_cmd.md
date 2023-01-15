@@ -16,6 +16,10 @@ heroku ps:scale web=1
 
 
 # Prisma
-npx prisma db push
+<!-- Format schema.prisma file -->
 npx prisma format
+<!-- Update postgre DB schemas -->
+npx prisma db push
+<!-- Generate @prisma/client types -->
+npx prisma generate
 
