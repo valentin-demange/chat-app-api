@@ -1,3 +1,4 @@
+import auth from './auth';
 import chats from './chats';
 import members from './members';
 import messages from './messages';
@@ -8,4 +9,5 @@ export default {
   chats,
   messages,
   members,
+  auth,
 };

@@ -28,8 +28,8 @@ app.use(
 );
 require("./utils/passport");
 
-app.use("/api/users", routes.users);
-
+app.use("/api/users", routes.auth);
+app.use("/api/users", passport.authenticate("jwt", { session: false }), routes.users);
 app.use("/api/chats", passport.authenticate("jwt", { session: false }), routes.chats);
 app.use("/api/messages", passport.authenticate("jwt", { session: false }), routes.messages);
 app.use("/api/members", passport.authenticate("jwt", { session: false }), routes.members);
