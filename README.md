@@ -7,7 +7,7 @@
 ### Features
 
 - REST APIs
-- Mail & Password login
+- Mail & Password authentication
 - JWT security
 - Web sockets
 - Postgresql Database integration
