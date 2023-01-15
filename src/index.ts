@@ -46,9 +46,9 @@ io.on("connection", (socket: any) => {
     console.log(`Delete chat for user n°${userId}`);
     io.to(userId).emit("delete chat", chatId);
   });
-  socket.on("update timestamp", (userId: number, timestamp: string) => {
-    console.log(`Timestamp to update : ${timestamp}`);
-    io.to(userId).emit("update timestamp", timestamp);
-  });
+  // socket.on("update timestamp", (userId: number, timestamp: string) => {
+  //   console.log(`Timestamp to update : ${timestamp}`);
+  //   io.to(userId).emit("update timestamp", timestamp);
+  // });
 });
 
