@@ -8,10 +8,6 @@ const router = Router();
 const prisma = new PrismaClient();
 const jwt = require("jsonwebtoken");
 
-router.get("/test_protected", function (req: any, res, next) {
-  console.log(req.user);
-  return res.status(200).send("OK");
-});
 router.post("/sign-up", async (req, res, next) => {
   try {
     const { email, password, firstName, lastName } = req.body;
