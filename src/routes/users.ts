@@ -6,6 +6,7 @@ const passport = require("passport");
 const _ = require("lodash");
 const router = Router();
 const prisma = new PrismaClient();
+const jwt = require("jsonwebtoken");
 
 router.post("/sign-up", async (req, res, next) => {
   try {
@@ -49,17 +50,20 @@ router.post("/sign-up", async (req, res, next) => {
             },
           });
           res.status(200).send("User has been created");
-        } catch (err:any) {
-          res.status(500).send("User has been successfully created but it has not been added to the general chat room");
+        } catch (err: any) {
+          res
+            .status(500)
+            .send(
+              "User has been successfully created but it has not been added to the general chat room"
+            );
         }
-
       }
     );
   } catch (error) {
     return next(error);
   }
 });
-router.post("/login", (req:any, res, next) => {
+router.post("/login", (req: any, res, next) => {
   passport.authenticate(
     "local",
     (err: any, user: any, info: { message: any }) => {
@@ -69,58 +73,30 @@ router.post("/login", (req:any, res, next) => {
       if (!user) {
         return res.status(401).send(info.message);
       }
-      req.logIn(user, (err:any) => {
+      req.logIn(user, (err: any) => {
         if (err) {
           return next(err);
         }
-        return res.status(200).send("Login successful");
+        // generate a signed son web token with the contents of user object and return it in the response
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+          expiresIn: "1h",
+        });
+
+        const userWithoutPassword = _.omit(user, ["password"]);
+
+        return res.status(200).json({ user:userWithoutPassword, token });
       });
     }
   )(req, res, next);
 });
-router.get("/logout", (req:any, res, next) => {
-  req.logout(function (err:any) {
+router.get("/logout", (req: any, res, next) => {
+  req.logout(function (err: any) {
     if (err) {
       return next(err);
     }
     return res.status(200).send({ message: "Successfully logged out" });
   });
 });
-
-router.get("/current/chats", async (req: any, res) => {
-  try {
-    if (!req.user) {
-      return res.status(404).send("User not found");
-    }
-    const userId = req.user.id;
-    // const userId = 1;
-    const members = await prisma.member.findMany({
-      where: { userId: userId },
-    });
-    const chatIds = members.map((member) => member.chatId);
-    res.send(chatIds);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-router.get("/current", async (req: any, res) => {
-  // const { userId } = req.params;
-  try {
-    // const user = await prisma.user.findUnique({
-    //   where: { id: Number(userId) },
-    // });
-
-    const user = req.user;
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-    const userWithoutPassword = _.omit(user, ["password"]);
-    return res.send(userWithoutPassword);
-  } catch (error) {
-    return res.status(500).send("An error occurred");
-  }
-});
-
 router.get("/:userId", async (req: any, res) => {
   const { userId } = req.params;
   try {
@@ -136,6 +112,21 @@ router.get("/:userId", async (req: any, res) => {
     return res.send(userWithoutPassword);
   } catch (error) {
     return res.status(500).send("An error occurred");
+  }
+});
+router.get('/:userId/chats', async (req, res) => {
+  try {
+    const userId = Number(req.params.userId);
+    const members = await prisma.member.findMany({
+      where: { userId: userId },
+    });
+    if (!members) {
+      return res.status(404).send('User not found');
+    }
+    const chatIds = members.map((member) => member.chatId);
+    res.send(chatIds);
+  } catch (error) {
+    res.status(500).send(error);
   }
 });
 

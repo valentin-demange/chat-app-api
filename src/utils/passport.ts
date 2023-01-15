@@ -4,6 +4,33 @@ const prisma = new PrismaClient()
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
+const passportJWT = require("passport-jwt");
+const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
+const jwt = require('jsonwebtoken');
+
+const opts = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET,
+};
+
+passport.use(new JwtStrategy(opts, async (jwt_payload:any, done:any) => {
+    try {
+        const user = await prisma.user.findUnique({
+          where: {
+            id: jwt_payload.id
+          },
+        });
+        if (user) {
+            return done(null, user);
+        }
+        return done(null, false);
+    } catch (err) {
+        return done(err, false);
+    }
+}));
 
 passport.use(
   new LocalStrategy(async (username:string, password:string, done:any) => {
@@ -13,7 +40,6 @@ passport.use(
           email: username
         },
       });
-
       if (!user) {
         return done(null, false, { message: "Incorrect username" })
       }
@@ -31,6 +57,7 @@ passport.use(
     }
   })
 )
+
 
 passport.serializeUser((user: User, done:any) => {
   done(null, user.id)

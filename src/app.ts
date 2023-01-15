@@ -31,14 +31,8 @@ require("./utils/passport");
 
 app.use("/api/users", routes.users);
 
-if (NODE_ENV == "dev") {
-  app.use("/api/chats", routes.chats);
-  app.use("/api/messages", routes.messages);
-  app.use("/api/members", routes.members);
-} else {
-  app.use('/api/chats', checkAuthenticated, routes.chats);
-  app.use('/api/messages', checkAuthenticated, routes.messages);
-  app.use('/api/members', checkAuthenticated, routes.members);
-}
+app.use("/api/chats", passport.authenticate("jwt", { session: false }), routes.chats);
+app.use("/api/messages", passport.authenticate("jwt", { session: false }), routes.messages);
+app.use("/api/members", passport.authenticate("jwt", { session: false }), routes.members);
 
 export default app;
