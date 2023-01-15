@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
-import { GENERAL_CHAT_ID } from "../config";
+import { GENERAL_CHAT_ID } from "../utils/constants";
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const _ = require("lodash");

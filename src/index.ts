@@ -1,14 +1,13 @@
 import { Message } from "@prisma/client";
 import http from "http";
 import app from "./app";
-import { PORT } from "./config";
 require("dotenv").config();
 const socketio = require("socket.io");
 
 const server = http.createServer(app);
 
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+server.listen(process.env.PORT, () => {
+  console.log(`Server running on port ${process.env.PORT}`);
 });
 
 const io = socketio(server);
@@ -46,6 +45,10 @@ io.on("connection", (socket: any) => {
   socket.on("delete chat", (userId: number, chatId: number) => {
     console.log(`Delete chat for user n°${userId}`);
     io.to(userId).emit("delete chat", chatId);
+  });
+  socket.on("update timestamp", (userId: number, timestamp: string) => {
+    console.log(`Timestamp to update : ${timestamp}`);
+    io.to(userId).emit("update timestamp", timestamp);
   });
 });
 

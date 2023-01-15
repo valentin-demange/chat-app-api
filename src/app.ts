@@ -1,6 +1,5 @@
 import { User } from "@prisma/client";
 import express from "express";
-import { CLIENT_URL, NODE_ENV, SESSION_SECRET } from "./config";
 import routes from "./routes";
 import { checkAuthenticated } from "./utils/passport";
 
@@ -14,7 +13,7 @@ const bcrypt = require("bcryptjs");
 const cors = require("cors");
 
 app.use(
-  session({ secret: SESSION_SECRET, resave: false, saveUninitialized: true })
+  session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true })
 );
 app.use(passport.initialize());
 app.use(passport.session());
@@ -22,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin: CLIENT_URL,
+    origin: process.env.CLIENT_URL,
     // origin: "*",
     credentials: true,
   })
