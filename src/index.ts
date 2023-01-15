@@ -25,7 +25,7 @@ io.on("connection", (socket: any) => {
     console.log(`User leaving room n°${chatId}`);
     socket.leave(chatId);
   });
-  socket.on("send message", (message: Message, chatId: number) => {
+  socket.on("send message", (message: any, chatId: number) => {
     console.log(`New message in room n°${chatId}`);
     io.to(chatId).emit("new message", message);
   });

@@ -21,7 +21,13 @@ router.post("/new", async (req, res) => {
         message,
       },
     });
-    res.json(newMessage);
+
+    const messageWithAvatar = await prisma.message.findUnique({
+      where: { id: newMessage.id },
+      include: { user: { select: { avatar: true } } },
+    });
+
+    res.json(messageWithAvatar);
   } catch (err:any) {
     res.status(500).send(err.message);
   }
