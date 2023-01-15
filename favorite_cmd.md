@@ -10,6 +10,9 @@ git remote -v
 git push heroku main
 <!-- Logs -->
 heroku logs --tail
+<!-- Stop app -->
+heroku ps:scale web=0
+heroku ps:scale web=1
 
 
 # Prisma
