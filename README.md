@@ -1,14 +1,33 @@
-# Chat App
+[Live Demo](https://blabla-19-90.vercel.app/) :point_left:
 
-## Work in progress 🚧
+[Client Repository](https://github.com/valentin-demange/chat-app-client)
 
-The objective is to start from [chat-app-firebase](https://github.com/valentin-demange/chat-app-firebase) and replace firebase BaaS with an express backend (PERN stack)
+# Chat App API
 
-This repository will contain the APIs only. For the client part, click [here](https://github.com/valentin-demange/chat-app-client)
+### Features
 
-Architectural choices:
+- REST APIs
+- Mail & Password login
+- JWT security
+- Web sockets
+- Postgresql Database integration
 
-- Database: Postgresql, hosted on [Heroku](https://www.heroku.com/)
-- ORM: [Prisma](https://www.prisma.io/)
-- Web socket: [ws](https://www.npmjs.com/package/ws)
+### Built with
 
+- [Node.js](https://nodejs.org/)
+- [Express](https://expressjs.com)
+- [Prisma ORM](https://www.prisma.io/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Socket.io](https://socket.io/)
+- [JWT](https://jwt.io/)
+- [Postman](https://www.postman.com/)
+
+### Inspired by
+
+- [The Odin Project](https://www.theodinproject.com)
+- [Michal Osman's project](https://github.com/michalosman/odinbook-api)
+- [Messenger](https://messenger.com)
+
+### To be implemented
+
+- Add dynamic timestamps
