@@ -30,6 +30,7 @@ router.get('/:userId/chats', async (req, res) => {
     const userId = Number(req.params.userId);
     const members = await prisma.member.findMany({
       where: { userId: userId },
+      orderBy: { chatId: "asc" },
     });
     if (!members) {
       return res.status(404).send('User not found');
