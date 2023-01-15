@@ -11,6 +11,7 @@ router.get("/:chatId/messages", async (req, res) => {
   try {
     const messages = await prisma.message.findMany({
       where: { chatId: chatId },
+      include: { user: { select: { avatar: true } } },
     });
     res.send(messages);
   } catch (e) {
