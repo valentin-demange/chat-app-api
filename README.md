@@ -21,6 +21,7 @@
 - [Socket.io](https://socket.io/)
 - [JWT](https://jwt.io/)
 - [Postman](https://www.postman.com/)
+- [Heroku](https://www.heroku.com/)
 
 ### Inspired by
 
