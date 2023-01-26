@@ -1,15 +1,12 @@
-import { User } from "@prisma/client";
 import express from "express";
-import routes from "./routes";
-import { checkAuthenticated } from "./utils/passport";
+import chatRoute from "./routes/chatRoute";
+import memberRoute from "./routes/memberRoute";
+import messageRoute from "./routes/messageRoute";
+import userRoute from "./routes/userRoute";
 
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
 const session = require("express-session");
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
 const app = express();
-const bcrypt = require("bcryptjs");
 const cors = require("cors");
 
 app.use(
@@ -32,32 +29,9 @@ app.use(
 );
 require("./utils/passport");
 
-app.use("/api/users", routes.auth);
-if (process.env.NODE_ENV == "dev") {
-  app.use("/api/users", routes.users);
-  app.use("/api/chats", routes.chats);
-  app.use("/api/messages", routes.messages);
-  app.use("/api/members", routes.members);
-} else {
-  app.use(
-    "/api/users",
-    passport.authenticate("jwt", { session: false }),
-    routes.users
-  );
-  app.use(
-    "/api/chats",
-    passport.authenticate("jwt", { session: false }),
-    routes.chats
-  );
-  app.use(
-    "/api/messages",
-    passport.authenticate("jwt", { session: false }),
-    routes.messages
-  );
-  app.use(
-    "/api/members",
-    passport.authenticate("jwt", { session: false }),
-    routes.members
-  );
-}
+app.use("/api/users", userRoute);
+app.use("/api/chats", chatRoute);
+app.use("/api/messages", messageRoute);
+app.use("/api/members", memberRoute);
+
 export default app;
