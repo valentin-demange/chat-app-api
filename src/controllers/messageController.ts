@@ -1,6 +1,4 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-const bcrypt = require("bcryptjs");
-const passport = require("passport");
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const newMessage = async (req:any, res:any) => {

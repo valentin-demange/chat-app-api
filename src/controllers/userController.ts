@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { GENERAL_CHAT_ID } from "../utils/constants";
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
