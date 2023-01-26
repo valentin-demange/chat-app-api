@@ -1,14 +1,49 @@
-import { Router } from "express";
-import { Prisma, PrismaClient } from "@prisma/client";
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
+const _ = require("lodash");
+import { PrismaClient } from "@prisma/client";
 import { GENERAL_CHAT_ID } from "../utils/constants";
 const bcrypt = require("bcryptjs");
-const passport = require("passport");
-const _ = require("lodash");
-const router = Router();
 const prisma = new PrismaClient();
-const jwt = require("jsonwebtoken");
 
-router.post("/sign-up", async (req, res, next) => {
+
+export const logout = (req: any, res:any, next:any) => {
+    req.logout(function (err: any) {
+      if (err) {
+        return next(err);
+      }
+      return res.status(200).send({ message: "Successfully logged out" });
+    });
+  }
+
+export const login = async (req: any, res:any, next:any) => {
+  passport.authenticate(
+    "local",
+    (err: any, user: any, info: { message: any }) => {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return res.status(401).send(info.message);
+      }
+      req.logIn(user, (err: any) => {
+        if (err) {
+          return next(err);
+        }
+        // generate a signed son web token with the contents of user object and return it in the response
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+          expiresIn: "1h",
+        });
+
+        const userWithoutPassword = _.omit(user, ["password"]);
+
+        return res.status(200).json({ user:userWithoutPassword, token });
+      });
+    }
+  )(req, res, next);
+}
+
+export const signup = async (req:any, res:any, next:any) => {
   try {
     const { email, password, firstName, lastName } = req.body;
 
@@ -62,40 +97,4 @@ router.post("/sign-up", async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-});
-router.post("/login", (req: any, res, next) => {
-  passport.authenticate(
-    "local",
-    (err: any, user: any, info: { message: any }) => {
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        return res.status(401).send(info.message);
-      }
-      req.logIn(user, (err: any) => {
-        if (err) {
-          return next(err);
-        }
-        // generate a signed son web token with the contents of user object and return it in the response
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-          expiresIn: "1h",
-        });
-
-        const userWithoutPassword = _.omit(user, ["password"]);
-
-        return res.status(200).json({ user:userWithoutPassword, token });
-      });
-    }
-  )(req, res, next);
-});
-router.get("/logout", (req: any, res, next) => {
-  req.logout(function (err: any) {
-    if (err) {
-      return next(err);
-    }
-    return res.status(200).send({ message: "Successfully logged out" });
-  });
-});
-
-export default router;
+}

@@ -1,8 +1,8 @@
-import auth from './auth';
-import chats from './chats';
-import members from './members';
-import messages from './messages';
-import users from './users';
+import auth from './authRoute';
+import chats from './chatRoute';
+import members from './memberRoute';
+import messages from './messageRoute';
+import users from './userRoute';
 
 export default {
   users,
